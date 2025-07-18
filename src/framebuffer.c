@@ -130,24 +130,24 @@ void draw_pixel(int x, int y, unsigned int color) {
     *(unsigned int *)(fb + offs) = color;
 }
 
-void draw_char(unsigned char ch, int x, int y, unsigned int color) {
+void draw_char(unsigned char ch, int x, int y, unsigned int color, int scale) {
     unsigned char *glyph = font[ch];
-    for (int i = 0; i < FONT_HEIGHT; i++) {
-        for (int j = 0; j < FONT_WIDTH; j++) {
-            unsigned int col = (*glyph & (1 << j)) ? color : 0;
+    for (int i = 0; i < FONT_HEIGHT*scale; i++) {
+        for (int j = 0; j < FONT_WIDTH*scale; j++) {
+            unsigned int col = (*glyph & (1 << (j/scale))) ? color : 0;
             draw_pixel(x + j, y + i, col);
         }
-        glyph += FONT_BPL;
+        glyph += ((i+1)%scale) ? 0 : FONT_BPL;
     }
 }
 
-void draw_string(int x, int y, char* s, unsigned int color) {
+void draw_string(int x, int y, char* s, unsigned int color, int scale) {
     for (int x_=x, y_=y; *s != '\0'; s++) {
         if (*s == '\r') x_ = x;
-        else if (*s == '\n') { x_ = x; y_ += FONT_HEIGHT; }
+        else if (*s == '\n') { x_ = x; y_ += FONT_HEIGHT * scale; }
         else {
-            draw_char(*s, x_, y_, color);
-            x_ += FONT_WIDTH;
+            draw_char(*s, x_, y_, color, scale);
+            x_ += FONT_WIDTH * scale;
         } 
     }
 }
