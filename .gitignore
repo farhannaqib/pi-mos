@@ -1,0 +1,5 @@
+*.o
+*.ao
+*.co
+kernel8.*
+*.elf
