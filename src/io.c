@@ -64,15 +64,15 @@ void uart_init() {
     mmio_write(AUX_MU_CNTL_REG, 3);     // Re-enable RX/TX
 }
 
-unsigned int uart_isWriteByteReady() { return mmio_read(AUX_MU_LSR_REG) & 0x20; }
+unsigned int uart_is_write_byte_ready() { return mmio_read(AUX_MU_LSR_REG) & 0x20; }
 
-void uart_writeByte(unsigned char ch) {
-    while (!uart_isWriteByteReady()) {};
+void uart_write_char(unsigned char ch) {
+    while (!uart_is_write_byte_ready()) {};
     mmio_write(AUX_MU_IO_REG, ch);
 }
 
-void uart_writeText(char *buffer) {
+void uart_write_text(char *buffer) {
     for (int i = 0; buffer[i] != '\0'; i++) {
-        uart_writeByte(buffer[i]);
+        uart_write_char(buffer[i]);
     }
 }
