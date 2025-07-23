@@ -16,15 +16,6 @@ _start:
     sub     w2, w2, #1
     cbnz    w2, 2b               // Loop if non-zero
 
-    // Tell other cores to start here
-    //ldr     x1, =_start
-    //mov     x2, 0x00E0
-    //str     x1, [x2]
-    //mov     x2, 0x00E8
-    //str     x1, [x2]
-    //mov     x2, 0x00F0
-    //str     x1, [x2]
-
 3:  // Set stack to start below our code
     ldr     x1, =_start
     mov     x2, 0x4000

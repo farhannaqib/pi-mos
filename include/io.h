@@ -11,4 +11,4 @@ void delay(unsigned int count);
 void uart_init();
 void uart_write_char(unsigned char ch);
 void uart_write_text(char *buffer);
-
+unsigned char uart_recv();

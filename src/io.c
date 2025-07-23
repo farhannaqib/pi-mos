@@ -44,7 +44,7 @@ enum {
     AUX_MU_STAT_REG = AUX_BASE + 0x64,
     AUX_MU_BAUD_REG = AUX_BASE + 0x68,
     
-    AUX_UART_CLOCK  = 500000000,
+    AUX_UART_CLOCK  = 250000000,
     UART_MAX_QUEUE  = 16 * 1024
 };
 
@@ -75,4 +75,11 @@ void uart_write_text(char *buffer) {
     for (int i = 0; buffer[i] != '\0'; i++) {
         uart_write_char(buffer[i]);
     }
+}
+
+unsigned int uart_is_read_byte_ready() { return mmio_read(AUX_MU_LSR_REG) & 0x01; }
+
+unsigned char uart_recv() {
+    while (!uart_is_read_byte_ready()) {};
+    return mmio_read(AUX_MU_IO_REG);
 }
