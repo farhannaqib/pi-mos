@@ -151,3 +151,18 @@ void draw_string(int x, int y, char* s, unsigned int color, int scale) {
         } 
     }
 }
+
+void run_shell() {
+    static int x = 50;
+    static int y = 20;
+    unsigned char ch = uart_recv();
+    if (ch == '\n' || ch == '\r') {
+        x = 50;
+        y += 20;
+    }
+    else {
+        draw_char(ch, x, y, 0x00FFFFFF, 2);
+        uart_write_char(ch);
+        x += 16;
+    }              
+}

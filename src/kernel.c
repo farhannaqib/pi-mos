@@ -18,22 +18,18 @@ void main(int core)
         // mmio_write(0xE0, (unsigned long)_start);
         // mmio_write(0xE8, (unsigned long)_start);
         // mmio_write(0xF0, (unsigned long)_start);
-        asm volatile ("sev");
+        // asm volatile ("sev");
     }
     
-    draw_char('0' + core, 50, 50 + 20 * core, 0x00FFFFFF, 2);
+    // draw_char('0' + core, 50, 50 + 20 * core, 0x00FFFFFF, 2);
     
     // delay(core * 1000000); // bc of writing text
-    
-    for (int i = 0; i < 5; i++) {
+   
+    while (1) {
         // delay(500000000);
         // uart_write_text("Processor ");
         // uart_write_char((i/4) + core + '0');
         // uart_write_char('\n');
-        uart_write_char('a' + i);
-        unsigned char ch = uart_recv();
-        draw_char(ch, 50, 50 + 20 * (i + 1), 0x00FFFFFF, 2);
+        run_shell();
     }
-    
-    while (1);
 }
