@@ -1,6 +1,7 @@
 #include "framebuffer.h"
 #include "io.h"
 #include "font.h"
+#include "utils.h"
 
 // The buffer must be 16-byte aligned as only the upper 28 bits of the address can be passed via the mailbox
 volatile unsigned int __attribute__((aligned(16))) mbox[36];
@@ -152,29 +153,20 @@ void draw_string(int x, int y, char* s, unsigned int color, int scale) {
     }
 }
 
-// i should rewrite this in a debug thing or in io but whatever
-void itoa(char* buf, unsigned int x) {
-    for (int i = 2; i >= 0; i--) {
-        buf[i] = '0' + (x % 10);
-        x /= 10;
-    }
-    buf[3] = '\0';
-}
-
 void run_shell() {
     static int x = 50;
     static int y = 20;
     unsigned char ch = uart_recv();
     char buf[4] = {0};
     itoa(buf, ch);
-    //uart_write_text(buf);
-    //uart_write_char('\n');
+    uart_write_text(buf);
+    uart_write_char('\n');
 
     if (ch == '\n' || ch == '\r') {
         x = 50;
         y += 20;
     }
-    else if (ch == 127) {
+    else if (ch == 127) { // backspace
         x -= 16;
     }
     else {
