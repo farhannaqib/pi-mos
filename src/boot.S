@@ -18,7 +18,7 @@ _start:
 
 3:  // Set stack to start below our code
     ldr     x1, =_start
-    mov     x2, 0x4000
+    mov     x2, 0x4000          // TODO fix this
     mul     x2, x2, x0
     add     x1, x1, x2 
     mov     sp, x1

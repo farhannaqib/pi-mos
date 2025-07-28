@@ -1,5 +1,7 @@
 #include "io.h"
 #include "framebuffer.h"
+#include "lib.h"
+#include "utils.h"
 
 extern void _start();
 
@@ -21,10 +23,14 @@ void main(int core)
         // asm volatile ("sev");
     }
     
+    char buf[2] = {0};
+    itoa(buf, get_el());
+    uart_write_text(buf);
+
     // draw_char('0' + core, 50, 50 + 20 * core, 0x00FFFFFF, 2);
     
     // delay(core * 1000000); // bc of writing text
-   
+    
     while (1) {
         // delay(500000000);
         // uart_write_text("Processor ");
