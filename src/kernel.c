@@ -21,12 +21,13 @@ void main(int core)
 {
     if (core == 0) {
         uart_init();
+        uart_write_text("UART INITIALIZED");
         fb_init();
        
         // wake up cores
         wakeup_cores();
 
-        run_shell();
+        // run_shell();
     }
     
     char buf[2] = {0};
