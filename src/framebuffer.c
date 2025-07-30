@@ -154,24 +154,26 @@ void draw_string(int x, int y, char* s, unsigned int color, int scale) {
 }
 
 void run_shell() {
-    static int x = 50;
-    static int y = 20;
-    unsigned char ch = uart_recv();
-    char buf[4] = {0};
-    itoa(buf, ch);
-    uart_write_text(buf);
-    uart_write_char('\n');
+    while (1) {
+        static int x = 50;
+        static int y = 20;
+        unsigned char ch = uart_recv();
+        char buf[4] = {0};
+        itoa(buf, ch);
+        uart_write_text(buf);
+        uart_write_char('\n');
 
-    if (ch == '\n' || ch == '\r') {
-        x = 50;
-        y += 20;
-    }
-    else if (ch == 127) { // backspace
-        x -= 16;
-    }
-    else {
-        draw_char(ch, x, y, 0x00FFFFFF, 2);
-        // uart_write_char(ch);
-        x += 16;
-    }              
+        if (ch == '\n' || ch == '\r') {
+            x = 50;
+            y += 20;
+        }
+        else if (ch == 127) { // backspace
+            x -= 16;
+        }
+        else {
+            draw_char(ch, x, y, 0x00FFFFFF, 2);
+            // uart_write_char(ch);
+            x += 16;
+        }          
+    }   
 }

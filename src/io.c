@@ -1,4 +1,5 @@
 #include "io.h"
+#include "utils.h"
 
 void mmio_write(long reg, unsigned int val) { *(volatile unsigned int *)reg = val; }
 unsigned int mmio_read(long reg) { return *(volatile unsigned int *)reg; }
@@ -10,10 +11,6 @@ enum {
     GPPUD           = PERIPHERAL_BASE + 0x200094,
     GPPUDCLK0       = PERIPHERAL_BASE + 0x200098
 };
-
-void delay(unsigned int count) {
-    while (count--) { asm volatile("nop"); }
-}
 
 void gpio_init() {
     unsigned int selector = mmio_read(GPFSEL1);

@@ -5,8 +5,6 @@ void mmio_write(long reg, unsigned int val);
 /** reads 4-byte val from register reg */
 unsigned int mmio_read(long reg);
 
-void delay(unsigned int count);
-
 /** must be ran before using uart funcs */
 void uart_init();
 void uart_write_char(unsigned char ch);

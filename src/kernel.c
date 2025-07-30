@@ -5,6 +5,18 @@
 
 extern void _start();
 
+// must be done AFTER init funcs are called
+void wakeup_cores() {
+    // originally this was in boot.S, but bc the event register
+    // might not be cleared on bootup, other cores will skip the spin 
+    // loop and immediately start executing main
+    
+    // mmio_write(0xE0, (unsigned long)_start);
+    // mmio_write(0xE8, (unsigned long)_start);
+    // mmio_write(0xF0, (unsigned long)_start);
+    // asm volatile ("sev");
+}
+
 void main(int core)
 {
     if (core == 0) {
@@ -12,15 +24,9 @@ void main(int core)
         fb_init();
        
         // wake up cores
-        // ideally this is done after core 0 initializes everything
-        // originally this was in src/boot.S, but bc the event register
-        // might not be cleared on bootup, other cores will skip the spin 
-        // loop and immediately start executing main, as core 0 is still 
-        // initializing... rlly annoying to debug
-        // mmio_write(0xE0, (unsigned long)_start);
-        // mmio_write(0xE8, (unsigned long)_start);
-        // mmio_write(0xF0, (unsigned long)_start);
-        // asm volatile ("sev");
+        wakeup_cores();
+
+        run_shell();
     }
     
     char buf[2] = {0};
@@ -31,11 +37,7 @@ void main(int core)
     
     // delay(core * 1000000); // bc of writing text
     
-    while (1) {
-        // delay(500000000);
-        // uart_write_text("Processor ");
-        // uart_write_char((i/4) + core + '0');
-        // uart_write_char('\n');
-        run_shell();
-    }
+    // uart_write_text("Processor ");
+    // uart_write_char((i/4) + core + '0');
+    // uart_write_char('\n');
 }
