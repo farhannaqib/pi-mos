@@ -10,18 +10,23 @@ _start:
     and     x0, x0, #0xFF
     cbnz    x0, 3f
 
+    b       el1_entry
+
     // Switch to EL1 
-    ldr     x0, =SCTLR_VALUE_MMU_DISABLED
-    msr     sctlr_el1, x0        
+    ldr     x1, =SCTLR_VALUE_MMU_DISABLED
+    msr     sctlr_el1, x1        
 
-    ldr     x0, =HCR_VALUE
-    msr     hcr_el2, x0
+    ldr     x1, =HCR_VALUE
+    msr     hcr_el2, x1
 
-    ldr     x0, =SPSR_VALUE
-    msr     spsr_el2, x0
+    ldr     x1, =SCR_VALUE
+    msr     scr_el3, x1
 
-    adr     x0, el1_entry        
-    msr     elr_el2, x0
+    ldr     x1, =SPSR_VALUE
+    msr     spsr_el3, x1
+
+    adr     x1, el1_entry        
+    msr     elr_el3, x1
 
     eret   
 
@@ -35,8 +40,6 @@ el1_entry:
     cbnz    w2, 2b               // Loop if non-zero
 
 3:  // Set stack to start below our code
-    mrs     x0, mpidr_el1
-    and     x0, x0, #0xFF
     ldr     x1, =_start
     mov     x2, 0x4000          // TODO fix this
     mul     x2, x2, x0

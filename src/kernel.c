@@ -25,14 +25,16 @@ void main(int core)
         fb_init();
        
         // wake up cores
-        wakeup_cores();
+        // wakeup_cores();
 
         // run_shell();
+        char buf[2] = {0};
+        itoa(buf, get_el());
+        uart_write_text(buf);
+        
     }
-    
-    char buf[2] = {0};
-    itoa(buf, get_el());
-    uart_write_text(buf);
+
+    // draw_char('0' + get_el(), 50 + (20 * core), 50, 0x00FFFFFF, 2);
 
     // draw_char('0' + core, 50, 50 + 20 * core, 0x00FFFFFF, 2);
     
