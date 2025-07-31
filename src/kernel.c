@@ -5,16 +5,13 @@
 
 extern void _start();
 
-// must be done AFTER init funcs are called
-void wakeup_cores() {
-    // originally this was in boot.S, but bc the event register
-    // might not be cleared on bootup, other cores will skip the spin 
-    // loop and immediately start executing main
-    
-    // mmio_write(0xE0, (unsigned long)_start);
-    // mmio_write(0xE8, (unsigned long)_start);
-    // mmio_write(0xF0, (unsigned long)_start);
-    // asm volatile ("sev");
+extern unsigned long spin_cpu0;
+extern unsigned long spin_cpu1;
+extern unsigned long spin_cpu2;
+extern unsigned long spin_cpu3;
+
+void wakeup_core(unsigned long *cpu, void *func) {
+    // TODO
 }
 
 void main(int core)
@@ -25,22 +22,25 @@ void main(int core)
         fb_init();
        
         // wake up cores
-        // wakeup_cores();
+        mmio_write((long) &spin_cpu1, (unsigned long)&main);
+        asm volatile ("sev");
 
         // run_shell();
-        char buf[2] = {0};
-        itoa(buf, get_el());
-        uart_write_text(buf);
-        
+        uart_write_char('0' + get_el());
+        uart_write_char('\n');
     }
 
-    // draw_char('0' + get_el(), 50 + (20 * core), 50, 0x00FFFFFF, 2);
+    if (core != 0) {
 
-    // draw_char('0' + core, 50, 50 + 20 * core, 0x00FFFFFF, 2);
-    
-    // delay(core * 1000000); // bc of writing text
-    
-    // uart_write_text("Processor ");
-    // uart_write_char((i/4) + core + '0');
-    // uart_write_char('\n');
+        draw_char('0' + core, 50 + (20 * core), 50, 0x00FFFFFF, 2);
+
+        // draw_char('0' + core, 50, 50 + 20 * core, 0x00FFFFFF, 2);
+        
+        // delay(10); // bc of writing text
+
+        uart_write_text("Processor ");
+        uart_write_char(core + '0');
+        uart_write_char('\n');
+
+    }
 }
