@@ -1,17 +1,17 @@
 CFILES = $(wildcard src/*.c)
 SFILES = $(wildcard src/*.S)
-COFILES = $(CFILES:.c=.o)
-SOFILES = $(SFILES:.S=.o)
+COFILES = $(CFILES:.c=.co)
+SOFILES = $(SFILES:.S=.so)
 LLVMPATH = /opt/homebrew/opt/llvm/bin
 LDPATH = /opt/homebrew/bin
 CLANGFLAGS = --target=aarch64-elf -Wall -O2 -ffreestanding -nostdinc -nostdlib -mcpu=cortex-a53+nosimd -Iinclude 
 
 all: clean kernel8.img
 
-%.o: %.S 
+%.so: %.S 
 	$(LLVMPATH)/clang $(CLANGFLAGS) -c $< -o $@
 
-%.o: %.c
+%.co: %.c
 	$(LLVMPATH)/clang $(CLANGFLAGS) -c $< -o $@
 
 kernel8.img: $(COFILES) $(SOFILES)
@@ -19,4 +19,4 @@ kernel8.img: $(COFILES) $(SOFILES)
 	$(LLVMPATH)/llvm-objcopy -O binary kernel8.elf kernel8.img
 
 clean:
-	/bin/rm kernel8.elf src/*.o *.img > /dev/null 2> /dev/null || true
+	/bin/rm kernel8.elf src/*.o src/*.co src/*.so *.img > /dev/null 2> /dev/null || true

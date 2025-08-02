@@ -1,5 +1,5 @@
 *.o
-*.ao
+*.so
 *.co
 kernel8.*
 *.elf

@@ -2,6 +2,7 @@
 #include "framebuffer.h"
 #include "lib.h"
 #include "utils.h"
+#include "irq.h"
 
 extern void _start();
 
@@ -18,6 +19,8 @@ void wakeup_core(unsigned long *addr, void (*func)()) {
 void main(int core)
 {
     if (core == 0) {
+        irq_vector_init();
+
         uart_init();
         uart_write_text("UART INITIALIZED");
         fb_init();
