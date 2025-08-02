@@ -54,7 +54,7 @@ void uart_init() {
     mmio_write(AUX_MU_IIR_REG, 6);          // Clear FIFOs, might not be necessary?
     mmio_write(AUX_MU_LCR_REG, 3);          // 8 bit mode
     mmio_write(AUX_MU_MCR_REG, 0);          // No autocontrol mode (no CTS/RTS)
-    mmio_write(AUX_MU_BAUD_REG, AUX_MU_BAUD(115200));    // TODO
+    mmio_write(AUX_MU_BAUD_REG, AUX_MU_BAUD(115200)); 
 
     gpio_init();
 

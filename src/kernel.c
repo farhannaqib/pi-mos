@@ -24,6 +24,8 @@ void main(int core)
        
         // wake up cores
         wakeup_core(&spin_cpu1, &main);
+        wakeup_core(&spin_cpu2, &main);
+        wakeup_core(&spin_cpu3, &main);
 
         // run_shell();
         uart_write_char('0' + get_el());
@@ -32,11 +34,11 @@ void main(int core)
     
     //delay(core * 100000000 + 1);
 
-    draw_char('0' + core, 50 + (20 * core), 50, 0x00FFFFFF, 2);
+    draw_char('0' + get_el(), 50 + (20 * core), 50, 0x00FFFFFF, 2);
     // draw_char('0' + core, 50, 50 + 20 * core, 0x00FFFFFF, 2);
     
 
-    delay(100000 * (core + 1));
+    delay(1000000 * (core + 1));
     uart_write_text("Processor ");
     uart_write_char(core + '0');
     uart_write_text(" - Exception Level: ");

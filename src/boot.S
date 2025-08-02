@@ -20,7 +20,7 @@ _start:
 
     adr     x1, el1_entry        
     msr     elr_el3, x1
-
+    
     eret   
     
 el1_entry:
@@ -35,10 +35,10 @@ el1_entry:
     ldr     x4, [x5, x0, lsl #3]
     cbz     x4, 1b
     
-    ldr     x1, =_start
-    mov     x2, 0x4000          // TODO fix this
+    ldr     x1, =__cpu0_stack
+    mov     x2, 0x2000
     mul     x2, x2, x0
-    add     x1, x1, x2 
+    subs    x1, x1, x2 
     mov     sp, x1
 
     // kernel code relies on x0 = mpidr_el1[1:0]

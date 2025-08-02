@@ -19,6 +19,11 @@ SECTIONS
         *(COMMON)
         __bss_end = .;
     }
+    .stack (NOLOAD) : {
+        . = ALIGN(16);
+        . = . + 0x8000;
+        __cpu0_stack = .;    
+    }
     _end = .;
 
    /DISCARD/ : { 
