@@ -3,6 +3,7 @@
 #include "lib.h"
 #include "utils.h"
 #include "irq.h"
+#include "timer.h"
 
 extern void _start();
 
@@ -19,11 +20,15 @@ void wakeup_core(unsigned long *addr, void (*func)()) {
 void main(int core)
 {
     if (core == 0) {
-        irq_vector_init();
-
         uart_init();
         uart_write_text("UART INITIALIZED");
         fb_init();
+        
+        irq_vector_init();
+        enable_interrupt_controller();
+
+        timer_init();
+        enable_irq();
        
         // wake up cores
         wakeup_core(&spin_cpu1, &main);

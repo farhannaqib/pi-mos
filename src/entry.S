@@ -72,6 +72,7 @@ vectors:
 
 el1_irq:
 	kernel_entry
+	bl		handle_irq	
 	kernel_exit
 
 handle_invalid_entry:
