@@ -21,16 +21,16 @@ void main(int core)
 {
     if (core == 0) {
         uart_init();
-        uart_write_text("UART INITIALIZED");
+        uart_write_text("UART INITIALIZED\n");
         fb_init();
         
         irq_vector_init();
         enable_interrupt_controller();
+        enable_irq();
 
         timer_init();
-        enable_irq();
        
-        // wake up cores
+        // wake up cores, spin_cpu defined in boot.S
         wakeup_core(&spin_cpu1, &main);
         wakeup_core(&spin_cpu2, &main);
         wakeup_core(&spin_cpu3, &main);
