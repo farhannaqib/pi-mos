@@ -4,12 +4,12 @@
 
 void enable_interrupt_controller() {
     int reg_val = mmio_read(ENABLE_IRQS_1);
-    mmio_write(ENABLE_IRQS_1, reg_val | SYSTEM_TIMER_1);
+    mmio_write(ENABLE_IRQS_1, reg_val | SYSTEM_TIMER_1 | AUX_INT);
 }
 
 void disable_interrupt_controller() {
     int reg_val = mmio_read(ENABLE_IRQS_1);
-    mmio_write(ENABLE_IRQS_1, reg_val & ~(SYSTEM_TIMER_1));
+    mmio_write(ENABLE_IRQS_1, reg_val & ~(SYSTEM_TIMER_1 | AUX_INT));
 }
 
 void handle_irq() {
@@ -18,6 +18,9 @@ void handle_irq() {
     switch (irq) {
         case (SYSTEM_TIMER_1):
             handle_timer_irq();
+            break;
+        case (AUX_INT):
+            handle_uart_irq();
             break;
         default:
             break;

@@ -25,8 +25,8 @@ void main(int core)
         fb_init();
         
         irq_vector_init();
+        enable_irq();   // enable ARM irqs
         enable_interrupt_controller();
-        enable_irq();
 
         timer_init();
        

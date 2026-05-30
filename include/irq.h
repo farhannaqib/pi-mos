@@ -13,6 +13,7 @@
 
 #define SYSTEM_TIMER_1      (1 << 1)
 #define SYSTEM_TIMER_3      (1 << 3)
+#define AUX_INT             (1 << 29)       // mini uart + spi
 
 void irq_vector_init();
 void enable_irq();
