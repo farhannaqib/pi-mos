@@ -14,5 +14,4 @@ void handle_timer_irq() {
     curVal += interval;
     mmio_write(TIMER_C1, curVal);
     mmio_write(TIMER_CS, TIMER_CS_C1);
-    uart_write_text("Timer interrupt recieved\n");
 }

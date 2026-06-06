@@ -9,5 +9,6 @@ unsigned int mmio_read(long reg);
 void uart_init();
 void uart_write_char(unsigned char ch);
 void uart_write_text(char *buffer);
-unsigned char uart_recv();
+/** non-blocking, reads from static buffer populated by irq handler */
+int uart_read();
 void handle_uart_irq();

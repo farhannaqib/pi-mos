@@ -157,11 +157,15 @@ void run_shell() {
     while (1) {
         static int x = 50;
         static int y = 20;
-        unsigned char ch = uart_recv();
+        // TODO: it's easiest to block, since we don't have
+        // scheduling yet :c
+        int ch_i = uart_read();
+        while (ch_i == -1) {
+            ch_i = uart_read();
+        }
+        unsigned char ch = ch_i;
         char buf[4] = {0};
         itoa(buf, ch);
-        uart_write_text(buf);
-        uart_write_char('\n');
 
         if (ch == '\n' || ch == '\r') {
             x = 50;

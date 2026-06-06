@@ -35,7 +35,7 @@ void main(int core)
         wakeup_core(&spin_cpu2, &main);
         wakeup_core(&spin_cpu3, &main);
 
-        // run_shell();
+        run_shell();
         uart_write_char('0' + get_el());
         uart_write_char('\n');
     }

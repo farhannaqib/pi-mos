@@ -58,7 +58,7 @@ void uart_init() {
 
     gpio_init();
 
-    mmio_write(AUX_MU_CNTL_REG, 3);                 // Re-enable RX/TX
+    mmio_write(AUX_MU_CNTL_REG, 3);                  // Re-enable RX/TX
     mmio_write(AUX_MU_IER_REG, (3 << 2) | 1);        // Re-enable recieve interrupts
 }
 
@@ -82,10 +82,27 @@ unsigned char uart_recv() {
     return mmio_read(AUX_MU_IO_REG);
 }
 
+static int buffer[8];
+static int head = 0;
+static int tail = 0;
+
+int uart_read() {
+    if (head == tail) return -1;
+
+    unsigned char data = buffer[tail];
+    tail = (tail + 1) % 8;
+
+    return data;
+}
+
 void handle_uart_irq() {
-    uart_write_text("IN UART IRQ\n");
     char c = uart_recv();
     uart_write_text("RECIEVED: ");
     uart_write_char(c);
+    
+    buffer[head] = c;
+    head = (head + 1) % 8;
+
     uart_write_text("\n");
+    mmio_write(AUX_MU_IIR_REG, 1 << 1);
 }
