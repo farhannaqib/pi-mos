@@ -6,9 +6,9 @@ A minimal (bare-metal) operating system for the Raspberry Pi 3B+
 
 While this works best on a physical Raspberry Pi, this OS works under emulation. Running the command
 
-```qemu-system-aarch64 -machine raspi3b -serial null -serial mon:stdio -device loader,file=./kernel8.img```
+```qemu-system-aarch64 -machine raspi3b -serial null -serial mon:stdio -kernel ./kernel8.elf```
 
-after calling `make` should emulate the OS.
+after calling `make` should emulate the OS. 
 
 ## Resources
 

@@ -79,3 +79,9 @@ handle_invalid_entry:
 	kernel_entry
 err_hang:	
 	b	err_hang
+
+.globl ret_from_fork
+ret_from_fork:
+	bl	enable_preempt
+	mov	x0, x20
+	blr	x19 		//should never return

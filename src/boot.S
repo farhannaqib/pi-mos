@@ -59,7 +59,7 @@ main_core:
     cbnz    w2, 2b               // Loop if non-zero
 
 3:  // Set stack to start below our code
-    ldr     x1, =_start
+    ldr     x1, =__cpu0_stack
     mov     sp, x1
 
     // Jump to main()

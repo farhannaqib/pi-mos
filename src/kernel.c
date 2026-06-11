@@ -4,6 +4,8 @@
 #include "utils.h"
 #include "irq.h"
 #include "timer.h"
+#include "sched.h"
+#include "fork.h"
 
 extern void _start();
 
@@ -17,13 +19,23 @@ void wakeup_core(unsigned long *addr, void (*func)()) {
     asm volatile ("sev");
 }
 
+void process(char *array)
+{
+    while (1){
+        for (int i = 0; i < 5; i++){
+            uart_write_char(array[i]);
+            delay(1000000);
+        }
+    }
+}
+
 void main(int core)
 {
     if (core == 0) {
         uart_init();
         uart_write_text("UART INITIALIZED\n");
         fb_init();
-        
+       
         irq_vector_init();
         enable_irq();   // enable ARM irqs
         enable_interrupt_controller();
@@ -35,9 +47,24 @@ void main(int core)
         wakeup_core(&spin_cpu2, &main);
         wakeup_core(&spin_cpu3, &main);
 
-        run_shell();
+        // run_shell();
         uart_write_char('0' + get_el());
         uart_write_char('\n');
+ 
+        int res = copy_process((unsigned long)&process, (unsigned long)"12345");
+        if (res != 0) {
+            uart_write_text("error while starting process 1");
+            return;
+        }
+        res = copy_process((unsigned long)&process, (unsigned long)"abcde");
+        if (res != 0) {
+            uart_write_text("error while starting process 2");
+            return;
+        }
+
+        while (1) {
+            schedule();
+        }
     }
     
     //delay(core * 100000000 + 1);
@@ -53,4 +80,7 @@ void main(int core)
     uart_write_char(get_el() + '0');
     uart_write_char('\n');
 
+    if (core == 1) {
+        run_shell();
+    }
 }

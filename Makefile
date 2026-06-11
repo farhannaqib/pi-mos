@@ -19,4 +19,4 @@ kernel8.img: $(COFILES) $(SOFILES)
 	$(LLVMPATH)/llvm-objcopy -O binary kernel8.elf kernel8.img
 
 clean:
-	/bin/rm kernel8.elf src/*.o src/*.co src/*.so *.img > /dev/null 2> /dev/null || true
+	/bin/rm kernel8.elf src/*.co src/*.so *.img > /dev/null 2> /dev/null || true
