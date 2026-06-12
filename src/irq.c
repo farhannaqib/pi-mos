@@ -1,6 +1,7 @@
 #include "io.h"
 #include "irq.h"
 #include "timer.h"
+#include "utils.h"
 
 void enable_interrupt_controller() {
     int reg_val = mmio_read(ENABLE_IRQS_1);

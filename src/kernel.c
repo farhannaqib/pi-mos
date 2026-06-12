@@ -24,6 +24,7 @@ void process(char *array)
     while (1){
         for (int i = 0; i < 5; i++){
             uart_write_char(array[i]);
+            uart_write_int(interrupts_enabled());
             delay(1000000);
         }
     }
@@ -38,6 +39,9 @@ void main(int core)
        
         irq_vector_init();
         enable_irq();   // enable ARM irqs
+        uart_write_text("INTERRUPTS ARE: ");
+        uart_write_int(interrupts_enabled());
+        uart_write_char('\n');
         enable_interrupt_controller();
 
         timer_init();
@@ -56,31 +60,21 @@ void main(int core)
             uart_write_text("error while starting process 1");
             return;
         }
-        res = copy_process((unsigned long)&process, (unsigned long)"abcde");
-        if (res != 0) {
-            uart_write_text("error while starting process 2");
-            return;
-        }
+        // res = copy_process((unsigned long)&process, (unsigned long)"abcde");
+        // res = copy_process((unsigned long)&run_shell, (unsigned long)0);
 
         while (1) {
             schedule();
         }
     }
-    
-    //delay(core * 100000000 + 1);
-
     draw_char('0' + get_el(), 50 + (20 * core), 50, 0x00FFFFFF, 2);
     // draw_char('0' + core, 50, 50 + 20 * core, 0x00FFFFFF, 2);
     
 
     delay(1000000 * (core + 1));
     uart_write_text("Processor ");
-    uart_write_char(core + '0');
+    uart_write_int(core);
     uart_write_text(" - Exception Level: ");
     uart_write_char(get_el() + '0');
     uart_write_char('\n');
-
-    if (core == 1) {
-        run_shell();
-    }
 }

@@ -64,7 +64,19 @@ void uart_init() {
 
 unsigned int uart_is_write_byte_ready() { return mmio_read(AUX_MU_LSR_REG) & 0x20; }
 
+char buf[100];
+int _head = 0;
+int _tail = 0;
+
+void core_write() { 
+    while (!uart_is_write_byte_ready()) {};
+    mmio_write(AUX_MU_IO_REG, buf[_tail]);
+    _tail = (_tail + 1) % 100;
+}
+
 void uart_write_char(unsigned char ch) {
+    // buf[_head] = ch;
+    // _head = (_head + 1) % 100;
     while (!uart_is_write_byte_ready()) {};
     mmio_write(AUX_MU_IO_REG, ch);
 }
@@ -72,6 +84,34 @@ void uart_write_char(unsigned char ch) {
 void uart_write_text(char *buffer) {
     for (int i = 0; buffer[i] != '\0'; i++) {
         uart_write_char(buffer[i]);
+    }
+}
+
+// TODO: could use itoa
+// INT_MIN doesn't work
+void uart_write_int(int num) {
+    char buf[10] = {0};
+
+    if (num < 0) {
+        uart_write_char('-');
+        num = -num;
+    }
+
+    if (num == 0) { 
+        uart_write_char('0');
+        return;
+    }
+
+    int i = 9;
+    while (num > 0) {
+        int digit = num % 10;
+        num = (num - digit) / 10;
+        buf[i] = digit + '0';
+        i--;
+    }
+
+    for (i = 0; i < 10; i++) {
+        if (buf[i] != 0) uart_write_char(buf[i]);
     }
 }
 
@@ -96,8 +136,8 @@ int uart_read() {
 }
 
 void handle_uart_irq() {
-    char c = uart_recv();
     uart_write_text("RECIEVED: ");
+    char c = uart_recv();
     uart_write_char(c);
     
     buffer[head] = c;

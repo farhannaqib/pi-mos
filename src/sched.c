@@ -3,10 +3,10 @@
 #include "irq.h"
 
 struct task_struct init_task = {
-    .cpu_context = {2,1,2,0,1,0,0,0,0,0,0,0,0},
+    .cpu_context = {0,0,0,0,0,0,0,0,0,0,0,0,0},
     .state = RUNNING,
     .pid = 0,
-    .counter = 5,
+    .counter = 0,
     .priority = 1,
     .preempt_count = 0
 };
@@ -24,28 +24,24 @@ void enable_preempt() {
 } 
 
 void print_proc(struct task_struct* addr) {
-	uart_write_text("\nPID:");
-	uart_write_char(addr->pid+'0');
+	uart_write_text("PID:");
+	uart_write_int(addr->pid);
 	uart_write_text(" State: ");
-	uart_write_char(addr->state+'0');
+	uart_write_int(addr->state);
 	uart_write_text(" counter: ");
-	uart_write_char(addr->counter+'0');
+	uart_write_int(addr->counter);
 	uart_write_text(" priority: ");
-	uart_write_char(addr->priority+'0');
+	uart_write_int(addr->priority);
 	uart_write_text(" preempt: ");
-	uart_write_char(addr->preempt_count+'0');
+	uart_write_int(addr->preempt_count);
 	uart_write_text("\n");
 }
 
-void schedule() {
+void _schedule() {
+	disable_preempt();
+	uart_write_text("Starting scheduler\n");
 	int next,c;
 	struct task_struct * p;
-	// uart_write_text("currently on: ");
-	// uart_write_char(current->pid + '0');
-	// uart_write_char('\n');
-	// print_proc(task[0]);
-	// print_proc(task[1]);
-	// print_proc(task[2]);
 	while (1) {
 		c = -1;
 		next = 0;
@@ -66,27 +62,36 @@ void schedule() {
 			}
 		}
 	}
-	// uart_write_text("Switching to: ");
-	// uart_write_char('0' + next);
+	uart_write_text("Switching to: ");
+	uart_write_char('0' + next);
+	uart_write_char('\n');
 	switch_to(task[next]);
-    // TODO enable/disable preempts
+	enable_preempt();
 }
 
 void switch_to(struct task_struct* next) {
 	if (current == next) return;
+	print_proc(current);
 	print_proc(next);
 	struct task_struct * prev = current;
 	current = next;
+	uart_write_text("cpu_switch_to\n");
 	cpu_switch_to(prev, next);
+}
+
+void schedule() {
+	current->counter = 0;
+	_schedule();
 }
 
 void sched_timer_tick() {
     current->counter--;
-    if (current->counter > 0 || current->preempt_count > 0) {
+    // uart_write_text("in timer tick\n");
+	if (current->counter > 0 || current->preempt_count > 0) {
 		return;
 	}
     current->counter = 0;
 	enable_irq();
-	schedule();
+	_schedule();
 	disable_irq();
 }

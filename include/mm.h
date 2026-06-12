@@ -2,7 +2,7 @@
 
 #define PAGE_SIZE               (1 << 12)
 
-#define LOW_MEMORY              (1 << 15)   // TODO fix 
+#define LOW_MEMORY              (1 << 21)   // TODO fix 
 #define HIGH_MEMORY             PERIPHERAL_BASE
 
 #define PAGES_TOTAL             ((HIGH_MEMORY-LOW_MEMORY)/PAGE_SIZE)

@@ -7,8 +7,10 @@ unsigned int mmio_read(long reg);
 
 /** must be ran before using uart funcs */
 void uart_init();
+void core_write();
 void uart_write_char(unsigned char ch);
 void uart_write_text(char *buffer);
+void uart_write_int(int num);
 /** non-blocking, reads from static buffer populated by irq handler */
 int uart_read();
 void handle_uart_irq();

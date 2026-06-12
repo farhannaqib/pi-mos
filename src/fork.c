@@ -21,8 +21,6 @@ int copy_process(unsigned long fn, unsigned long arg) {
     // add to the scheduler
     int pid = nr_tasks++;
     p->pid = pid;
-    uart_write_text("COPYING to: ");
-    uart_write_char(pid + '0');
     task[pid] = p;
     
     enable_preempt();
