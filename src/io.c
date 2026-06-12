@@ -122,7 +122,7 @@ unsigned char uart_recv() {
     return mmio_read(AUX_MU_IO_REG);
 }
 
-static int buffer[8];
+static int buffer[32];
 static int head = 0;
 static int tail = 0;
 

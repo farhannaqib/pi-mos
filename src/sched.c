@@ -39,7 +39,7 @@ void print_proc(struct task_struct* addr) {
 
 void _schedule() {
 	disable_preempt();
-	uart_write_text("Starting scheduler\n");
+	// uart_write_text("Starting scheduler\n");
 	int next,c;
 	struct task_struct * p;
 	while (1) {
@@ -62,20 +62,20 @@ void _schedule() {
 			}
 		}
 	}
-	uart_write_text("Switching to: ");
-	uart_write_char('0' + next);
-	uart_write_char('\n');
+	// uart_write_text("Switching to: ");
+	// uart_write_char('0' + next);
+	// uart_write_char('\n');
 	switch_to(task[next]);
 	enable_preempt();
 }
 
 void switch_to(struct task_struct* next) {
 	if (current == next) return;
-	print_proc(current);
-	print_proc(next);
+	// print_proc(current);
+	// print_proc(next);
 	struct task_struct * prev = current;
 	current = next;
-	uart_write_text("cpu_switch_to\n");
+	// uart_write_text("cpu_switch_to\n");
 	cpu_switch_to(prev, next);
 }
 

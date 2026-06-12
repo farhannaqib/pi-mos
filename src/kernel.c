@@ -24,8 +24,7 @@ void process(char *array)
     while (1){
         for (int i = 0; i < 5; i++){
             uart_write_char(array[i]);
-            uart_write_int(interrupts_enabled());
-            delay(1000000);
+            delay(100000);
         }
     }
 }
@@ -60,8 +59,8 @@ void main(int core)
             uart_write_text("error while starting process 1");
             return;
         }
-        // res = copy_process((unsigned long)&process, (unsigned long)"abcde");
-        // res = copy_process((unsigned long)&run_shell, (unsigned long)0);
+        res = copy_process((unsigned long)&process, (unsigned long)"abcde");
+        res = copy_process((unsigned long)&run_shell, (unsigned long)0);
 
         while (1) {
             schedule();

@@ -3,7 +3,7 @@
 #include "sched.h"
 #include "irq.h"
 
-const unsigned interval = 10000;
+const unsigned interval = 50000;
 unsigned int curVal = 0;
 
 void timer_init() {
@@ -13,7 +13,6 @@ void timer_init() {
 }
 
 void handle_timer_irq() {
-    uart_write_text("IN TIMER");
     mmio_write(TIMER_CS, TIMER_CS_C1);
     unsigned now = mmio_read(TIMER_CLO);
     do {    // catch-up loop

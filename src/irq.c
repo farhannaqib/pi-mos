@@ -15,14 +15,8 @@ void disable_interrupt_controller() {
 
 void handle_irq() {
     unsigned int irq = mmio_read(IRQ_PENDING_1);
-    switch (irq) {
-        case (SYSTEM_TIMER_1):
-            handle_timer_irq();
-            break;
-        case (AUX_INT):
-            handle_uart_irq();
-            break;
-        default:
-            break;
-    }
+  
+    if (irq & SYSTEM_TIMER_1) handle_timer_irq();
+    if (irq & AUX_INT) handle_uart_irq();
+
 }
